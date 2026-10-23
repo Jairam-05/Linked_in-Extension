@@ -1,5 +1,6 @@
 import serpapi
 from pydantic import BaseModel
+import os
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
@@ -13,7 +14,7 @@ class job_details(BaseModel):
     Location: str|None
     Role_desc: str
     comp_url: str|None
-client=serpapi.Client(api_key="")
+client=serpapi.Client(api_key="56d8f1c27f20e089ed5ba449c4008a201f900b55cad71e668e43bd681ada4773")
 SKIP_FETCH = ("linkedin.com", "glassdoor.com", "ambitionbox.com",
               "facebook.com", "youtube.com", "instagram.com")
 
@@ -75,8 +76,11 @@ def search_all(job: job_details) -> dict[str, list[dict]]:
 
     # 1. all searches in parallel
     with ThreadPoolExecutor(max_workers=5) as ex:
-        results = dict(ex.map(lambda kv: run_search(*kv), queries.items()))
-
+        results = dict(ex.map(lambda kv: run_search(*kv), queries.items())) # Queries is a dictionary and we are using the items() method to get the key-value pairs of the dictionary.
+#Lambda function is used to pass the key-value pairs to run_search function
+#*kv seperates the key value pairs and passes them as arguments to run_search function
+#ex.map() is a thread pool can run multiple searches in parallel.
+#dict() is used to convert the results into a dictionary where the key is the name of the search and the value is the list of results.
     # 2. filter BEFORE fetching: only relevant results, top 2 per check
     for name, items in results.items():
         results[name] = [r for r in items if is_relevant(r, job)][:2]
