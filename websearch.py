@@ -14,7 +14,7 @@ class job_details(BaseModel):
     Location: str|None
     Role_desc: str
     comp_url: str|None
-client=serpapi.Client(api_key="56d8f1c27f20e089ed5ba449c4008a201f900b55cad71e668e43bd681ada4773")
+client=serpapi.Client(api_key=os.getenv())
 SKIP_FETCH = ("linkedin.com", "glassdoor.com", "ambitionbox.com",
               "facebook.com", "youtube.com", "instagram.com")
 
